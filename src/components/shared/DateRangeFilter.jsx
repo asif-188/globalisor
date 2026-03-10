@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Calendar } from 'lucide-react';
 
 export default function DateRangeFilter({ startDate, endDate, onRangeChange }) {
@@ -35,17 +35,22 @@ export default function DateRangeFilter({ startDate, endDate, onRangeChange }) {
         );
     };
 
+    useEffect(() => {
+        if (!startDate && !endDate) {
+            handlePreset('Monthly');
+        }
+    }, []);
+
     return (
         <div style={{ display: 'flex', gap: 10, alignItems: 'center', flexWrap: 'wrap' }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-                <span style={{ fontSize: '0.8rem', fontWeight: 600, color: '#6b7280' }}>Range:</span>
+                <span style={{ fontSize: '0.8rem', fontWeight: 600, color: '#6b7280' }}>Date Range:</span>
                 <select 
                     className="select-filter" 
                     onChange={e => handlePreset(e.target.value)}
-                    defaultValue=""
+                    defaultValue="Monthly"
                     style={{ fontSize: '0.8rem', padding: '5px 10px', height: 32 }}
                 >
-                    <option value="" disabled>Select Preset...</option>
                     {['Daily', 'Weekly', 'Monthly', 'Yearly', 'Previous Year'].map(p => (
                         <option key={p} value={p}>{p}</option>
                     ))}

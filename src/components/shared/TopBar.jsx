@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { Bell, Search, Info } from 'lucide-react';
+import { Bell, Info } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext.jsx';
 import { useAppData } from '../../context/AppContext.jsx';
@@ -62,10 +62,6 @@ export default function TopBar({ title }) {
                 <span className="topbar-title">{title}</span>
             </div>
             <div className="topbar-right">
-                <div className="topbar-search">
-                    <Search size={15} style={{ color: 'var(--grey-400)', flexShrink: 0 }} />
-                    <input type="text" placeholder="Search..." />
-                </div>
                 <div style={{ position: 'relative' }} ref={dropdownRef}>
                     <button className="topbar-icon-btn" onClick={handleBellClick}>
                         <Bell size={18} />
