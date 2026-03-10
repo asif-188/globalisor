@@ -17,18 +17,26 @@ const USERS = {
 };
 
 export function AuthProvider({ children }) {
-    const [user, setUser] = useState(null);
+    const [user, setUser] = useState(() => {
+        const savedUser = localStorage.getItem('user');
+        return savedUser ? JSON.parse(savedUser) : null;
+    });
 
     const login = (email, password) => {
         const found = USERS[email.toLowerCase()];
         if (found && password.length >= 1) {
-            setUser({ ...found, id: found.user_id });
+            const userData = { ...found, id: found.user_id };
+            setUser(userData);
+            localStorage.setItem('user', JSON.stringify(userData));
             return { success: true, redirect: found.redirect };
         }
         return { success: false, error: 'Invalid credentials. Use the demo accounts listed below.' };
     };
 
-    const logout = () => setUser(null);
+    const logout = () => {
+        setUser(null);
+        localStorage.removeItem('user');
+    };
 
     return (
         <AuthContext.Provider value={{ user, login, logout }}>
