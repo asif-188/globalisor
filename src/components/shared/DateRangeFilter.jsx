@@ -35,11 +35,7 @@ export default function DateRangeFilter({ startDate, endDate, onRangeChange }) {
         );
     };
 
-    useEffect(() => {
-        if (!startDate && !endDate) {
-            handlePreset('Monthly');
-        }
-    }, []);
+
 
     return (
         <div style={{ display: 'flex', gap: 10, alignItems: 'center', flexWrap: 'wrap' }}>
@@ -48,9 +44,10 @@ export default function DateRangeFilter({ startDate, endDate, onRangeChange }) {
                 <select 
                     className="select-filter" 
                     onChange={e => handlePreset(e.target.value)}
-                    defaultValue="Monthly"
+                    value={(!startDate && !endDate) ? "" : undefined}
                     style={{ fontSize: '0.8rem', padding: '5px 10px', height: 32 }}
                 >
+                    <option value="" disabled>Select</option>
                     {['Daily', 'Weekly', 'Monthly', 'Yearly', 'Previous Year'].map(p => (
                         <option key={p} value={p}>{p}</option>
                     ))}
