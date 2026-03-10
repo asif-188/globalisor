@@ -47,7 +47,6 @@ export default function DocumentVault() {
                         <ArrowLeft size={18} />
                     </button>
                     <div>
-                        <h1 className="page-title">{company ? company.name : 'Document Vault'}</h1>
                     </div>
                 </div>
                 <button className="btn btn-primary">

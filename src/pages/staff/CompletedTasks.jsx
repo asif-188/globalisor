@@ -25,7 +25,6 @@ export default function CompletedTasks() {
     return (
         <div>
             <div className="page-header">
-                <h1 className="page-title">Completed Tasks</h1>
             </div>
 
             {/* Summary stats */}

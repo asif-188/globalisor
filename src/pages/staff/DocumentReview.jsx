@@ -30,7 +30,6 @@ export default function DocumentReview() {
     return (
         <div>
             <div className="page-header">
-                <h1 className="page-title">Document Review</h1>
             </div>
 
             <div style={{ marginBottom: 16 }}>

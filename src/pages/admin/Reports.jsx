@@ -24,9 +24,6 @@ export default function Reports() {
     return (
         <div>
             <div className="page-header flex justify-between items-center">
-                <div>
-                    <h1 className="page-title">Reports</h1>
-                </div>
                 <button className="btn btn-outline btn-sm"><Download size={15} /> Export PDF</button>
             </div>
 

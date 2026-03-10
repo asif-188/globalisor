@@ -53,7 +53,6 @@ export default function Messages() {
     return (
         <div>
             <div className="page-header">
-                <h1 className="page-title">Messages</h1>
             </div>
 
             <div style={{ display: 'grid', gridTemplateColumns: '280px 1fr', gap: 20, height: 520 }}>

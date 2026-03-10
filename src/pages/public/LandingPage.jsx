@@ -102,14 +102,7 @@ export default function LandingPage() {
 
                 <div style={{ maxWidth: 1200, margin: '0 auto', position: 'relative' }}>
                     {/* Pill badge */}
-                    <div style={{
-                        display: 'inline-flex', alignItems: 'center', gap: 8,
-                        background: 'rgba(0,163,224,0.15)', border: '1px solid rgba(0,163,224,0.35)',
-                        padding: '6px 16px', borderRadius: 999, marginBottom: 28,
-                        fontSize: '0.8rem', fontWeight: 600, color: '#7dd3fc',
-                    }}>
-                        <Star size={12} fill="#7dd3fc" /> Trusted by 5,000+ Entrepreneurs in Singapore
-                    </div>
+
 
                     <h1 style={{
                         fontSize: 'clamp(2.4rem, 5.5vw, 4rem)', fontWeight: 800, lineHeight: 1.1,
@@ -182,11 +175,7 @@ export default function LandingPage() {
             <section id="services" style={{ padding: '96px 5%', background: '#f8fafc' }}>
                 <div style={{ maxWidth: 1200, margin: '0 auto' }}>
                     <div style={{ textAlign: 'center', marginBottom: 56 }}>
-                        <div style={{
-                            display: 'inline-block', background: '#e6f0fb', color: '#0055a4',
-                            fontSize: '1.4rem', fontWeight: 700, padding: '14px 40px', borderRadius: 999,
-                            marginBottom: 12, textTransform: 'uppercase', letterSpacing: '0.06em',
-                        }}>Our Services</div>
+
                         <h2 style={{
                             fontSize: 'clamp(1.75rem, 3vw, 2.5rem)', fontWeight: 800,
                             color: '#0a2340', letterSpacing: '-0.02em',
@@ -229,9 +218,7 @@ export default function LandingPage() {
             }}>
                 <div style={{ maxWidth: 1200, margin: '0 auto', display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 64, alignItems: 'center' }}>
                     <div>
-                        <div style={{ display: 'inline-block', background: 'rgba(0,163,224,0.15)', border: '1px solid rgba(0,163,224,0.3)', color: '#7dd3fc', fontSize: '0.72rem', fontWeight: 700, padding: '4px 12px', borderRadius: 999, marginBottom: 16, textTransform: 'uppercase', letterSpacing: '0.06em' }}>
-                            Why Globalisor
-                        </div>
+
                         <h2 style={{ fontSize: 'clamp(1.75rem, 3vw, 2.4rem)', fontWeight: 800, color: 'white', lineHeight: 1.2, letterSpacing: '-0.02em', marginBottom: 20 }}>
                             Singapore's New Generation Corporate Services Firm
                         </h2>
@@ -257,7 +244,7 @@ export default function LandingPage() {
             <section style={{ padding: '96px 5%', background: 'white' }}>
                 <div style={{ maxWidth: 1200, margin: '0 auto' }}>
                     <div style={{ textAlign: 'center', marginBottom: 56 }}>
-                        <div style={{ display: 'inline-block', background: '#e6f0fb', color: '#0055a4', fontSize: '1.4rem', fontWeight: 700, padding: '14px 40px', borderRadius: 999, marginBottom: 12, textTransform: 'uppercase', letterSpacing: '0.06em' }}>How It Works</div>
+
                         <h2 style={{ fontSize: 'clamp(1.75rem, 3vw, 2.5rem)', fontWeight: 800, color: '#0a2340', letterSpacing: '-0.02em' }}>
                             Incorporate in 4 Simple Steps
                         </h2>

@@ -42,9 +42,6 @@ export default function Settings() {
     return (
         <div>
             <div className="page-header flex justify-between items-center">
-                <div>
-                    <h1 className="page-title">Settings</h1>
-                </div>
                 <button className="btn btn-primary" onClick={handleSave}>
                     <Save size={16} /> {saved ? 'Saved!' : 'Save Changes'}
                 </button>

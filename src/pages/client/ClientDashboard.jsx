@@ -70,7 +70,7 @@ export default function ClientDashboard() {
                     }}>
                         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
                             <div>
-                                <div style={{ color: 'rgba(255,255,255,0.75)', fontSize: '0.8rem', marginBottom: 4, textTransform: 'uppercase', letterSpacing: 1 }}>Latest Application</div>
+
                                 <div style={{ color: 'white', fontWeight: 700, fontSize: '1.4rem', marginBottom: 8 }}>{latestApp.business_name}</div>
                                 <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
                                     <StatusBadge status={latestApp.status} />
@@ -112,7 +112,7 @@ export default function ClientDashboard() {
                     {/* Dedicated Account Manager Card */}
                     {latestApp.staff_name ? (
                         <div className="card" style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', border: '1px solid #e0e7ff', background: '#f8fafc' }}>
-                            <div style={{ fontSize: '0.75rem', fontWeight: 700, color: '#4f46e5', textTransform: 'uppercase', letterSpacing: 0.5, marginBottom: 12 }}>Dedicated Account Manager</div>
+
                             <div style={{ display: 'flex', alignItems: 'center', gap: 14, marginBottom: 16 }}>
                                 <div style={{ width: 48, height: 48, borderRadius: '50%', background: '#c7d2fe', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#4f46e5', fontWeight: 600, fontSize: '1.2rem' }}>
                                     {latestApp.staff_name.charAt(0)}

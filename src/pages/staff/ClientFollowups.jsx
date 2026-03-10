@@ -51,7 +51,6 @@ export default function ClientFollowups() {
     return (
         <div>
             <div className="page-header">
-                <h1 className="page-title">Client Follow-ups</h1>
             </div>
 
             {openCount > 0 && (

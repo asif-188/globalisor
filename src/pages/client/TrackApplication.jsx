@@ -27,7 +27,7 @@ export default function TrackApplication() {
     if (!app) {
         return (
             <div>
-                <div className="page-header"><h1 className="page-title">Track Application</h1></div>
+                <div className="page-header"></div>
                 <div className="card" style={{ textAlign: 'center', padding: 64, color: '#9ca3af' }}>
                     <div style={{ fontSize: '3rem', marginBottom: 12 }}>📋</div>
                     <div style={{ fontWeight: 600, marginBottom: 8 }}>No applications yet</div>
@@ -40,7 +40,6 @@ export default function TrackApplication() {
     return (
         <div>
             <div className="page-header">
-                <h1 className="page-title">Track Application</h1>
             </div>
 
             {/* App Info */}

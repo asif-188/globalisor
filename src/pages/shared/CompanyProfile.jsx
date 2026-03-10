@@ -49,7 +49,6 @@ export default function CompanyProfile() {
                     <ArrowLeft size={18} />
                 </button>
                 <div>
-                    <h1 className="page-title">{company.name}</h1>
                     <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginTop: 4 }}>
                         <span style={{ fontSize: '0.85rem', color: '#6b7280', fontWeight: 500 }}>UEN: {company.uen}</span>
                         <div style={{ width: 4, height: 4, borderRadius: '50%', background: '#d1d5db' }} />

@@ -39,7 +39,6 @@ export default function KYCReview() {
     return (
         <div>
             <div className="page-header">
-                <h1 className="page-title">KYC Review</h1>
             </div>
 
             <div style={{ display: 'grid', gridTemplateColumns: '300px 1fr', gap: 20 }}>

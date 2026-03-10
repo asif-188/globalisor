@@ -48,7 +48,6 @@ export default function StaffManagement() {
     return (
         <div>
             <div className="page-header">
-                <h1 className="page-title">Staff</h1>
             </div>
 
             <div className="card" style={{ padding: 0 }}>

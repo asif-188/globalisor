@@ -85,7 +85,7 @@ export default function AdminDashboard() {
                 ))}
             </div>
 
-            <div className="card-title" style={{ marginBottom: 12, marginTop: 12 }}>Today's Activity</div>
+
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: 20, marginBottom: 24 }}>
                 {todayCards.map(s => (
                     <div key={s.label} className="card" style={{ padding: '16px', display: 'flex', alignItems: 'center', gap: 14 }}>
