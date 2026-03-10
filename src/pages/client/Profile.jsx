@@ -23,6 +23,7 @@ export default function Profile() {
     return (
         <div>
             <div className="page-header">
+                <h1>My Profile</h1>
             </div>
 
             {/* Avatar */}

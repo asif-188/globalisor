@@ -24,6 +24,7 @@ export default function ComplianceMonitoring() {
     return (
         <div>
             <div className="page-header">
+                <h1>Compliance Monitoring</h1>
             </div>
 
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 380px', gap: 20 }}>

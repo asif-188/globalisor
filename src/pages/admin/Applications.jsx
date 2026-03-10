@@ -3,6 +3,7 @@ import { useAppData } from '../../context/AppContext.jsx';
 import { useAuth } from '../../context/AuthContext.jsx';
 import StatusBadge from '../../components/shared/StatusBadge.jsx';
 import { Search, Download } from 'lucide-react';
+import DateRangeFilter from '../../components/shared/DateRangeFilter.jsx';
 
 const STATUSES = ['All', 'New', 'KYC Review', 'Pending Documents', 'In Progress', 'Submitted to ACRA', 'Completed', 'Rejected'];
 const PRIORITIES = ['All', 'Normal', 'High', 'Emergency'];
@@ -13,9 +14,16 @@ export default function Applications() {
     const [search, setSearch] = useState('');
     const [statusFilter, setStatusFilter] = useState('All');
     const [priorityFilter, setPriorityFilter] = useState('All');
+    const [startDate, setStartDate] = useState('');
+    const [endDate, setEndDate] = useState('');
     const [showAssignModal, setShowAssignModal] = useState(false);
     const [selectedApp, setSelectedApp] = useState(null);
     const [selectedStaff, setSelectedStaff] = useState('');
+
+    const handleRangeChange = (start, end) => {
+        setStartDate(start);
+        setEndDate(end);
+    };
 
     const applications = getApplicationsForUser(user?.id, 'admin');
     const staffUsers = db.users.filter(u => u.role === 'staff' && u.status === 'active');
@@ -27,7 +35,19 @@ export default function Applications() {
             (a.client_name || '').toLowerCase().includes(q);
         const matchStatus = statusFilter === 'All' || a.status === statusFilter;
         const matchPriority = priorityFilter === 'All' || a.priority === priorityFilter;
-        return matchSearch && matchStatus && matchPriority;
+
+        let matchDate = true;
+        if (startDate || endDate) {
+            const createdDate = new Date(a.created_at);
+            if (startDate) matchDate = matchDate && createdDate >= new Date(startDate);
+            if (endDate) {
+                const endLimit = new Date(endDate);
+                endLimit.setHours(23, 59, 59, 999);
+                matchDate = matchDate && createdDate <= endLimit;
+            }
+        }
+
+        return matchSearch && matchStatus && matchPriority && matchDate;
     });
 
     const handleAssign = () => {
@@ -40,6 +60,7 @@ export default function Applications() {
     return (
         <div>
             <div className="page-header">
+                <h1>All Applications</h1>
             </div>
 
             <div className="card" style={{ padding: 0 }}>
@@ -48,6 +69,13 @@ export default function Applications() {
                         <div className="search-input" style={{ flex: 1, minWidth: 200 }}>
                             <Search size={14} style={{ color: 'var(--grey-400)' }} />
                             <input placeholder="Search by ID, business, client..." value={search} onChange={e => setSearch(e.target.value)} />
+                        </div>
+                        <div style={{ display: 'flex', gap: 10, alignItems: 'center' }}>
+                            <DateRangeFilter 
+                                startDate={startDate} 
+                                endDate={endDate} 
+                                onRangeChange={handleRangeChange} 
+                            />
                         </div>
                         <select className="select-filter" value={statusFilter} onChange={e => setStatusFilter(e.target.value)}>
                             {STATUSES.map(s => <option key={s}>{s}</option>)}

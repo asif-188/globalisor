@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { GlobalisorLogo } from '../../components/shared/GlobalisorLogo.jsx';
 import {
@@ -46,6 +46,9 @@ const FAQS = [
 
 export default function LandingPage() {
     const navigate = useNavigate();
+    useEffect(() => {
+        document.title = "Globalisor | Singapore's Trusted Corporate Services";
+    }, []);
 
     return (
         <div style={{ fontFamily: 'Inter, sans-serif', color: '#1f2937', overflowX: 'hidden' }}>
@@ -176,6 +179,7 @@ export default function LandingPage() {
                 <div style={{ maxWidth: 1200, margin: '0 auto' }}>
                     <div style={{ textAlign: 'center', marginBottom: 56 }}>
 
+                        <div style={{ color: '#0055a4', fontWeight: 800, fontSize: '0.8rem', textTransform: 'uppercase', letterSpacing: '0.15em', marginBottom: 12 }}>Our Services</div>
                         <h2 style={{
                             fontSize: 'clamp(1.75rem, 3vw, 2.5rem)', fontWeight: 800,
                             color: '#0a2340', letterSpacing: '-0.02em',
@@ -217,8 +221,8 @@ export default function LandingPage() {
                 backgroundSize: 'cover', backgroundPosition: 'center bottom',
             }}>
                 <div style={{ maxWidth: 1200, margin: '0 auto', display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 64, alignItems: 'center' }}>
-                    <div>
-
+                    <div style={{ flex: 1 }}>
+                        <div style={{ color: '#00a3e0', fontWeight: 800, fontSize: '0.8rem', textTransform: 'uppercase', letterSpacing: '0.15em', marginBottom: 12 }}>About Us</div>
                         <h2 style={{ fontSize: 'clamp(1.75rem, 3vw, 2.4rem)', fontWeight: 800, color: 'white', lineHeight: 1.2, letterSpacing: '-0.02em', marginBottom: 20 }}>
                             Singapore's New Generation Corporate Services Firm
                         </h2>
@@ -290,6 +294,7 @@ export default function LandingPage() {
             <section id="faq" style={{ padding: '96px 5%', background: 'white' }}>
                 <div style={{ maxWidth: 800, margin: '0 auto' }}>
                     <div style={{ textAlign: 'center', marginBottom: 56 }}>
+                        <div style={{ color: '#0055a4', fontWeight: 800, fontSize: '0.8rem', textTransform: 'uppercase', letterSpacing: '0.15em', marginBottom: 12 }}>FAQ</div>
                         <h2 style={{ fontSize: 'clamp(1.75rem, 3vw, 2.5rem)', fontWeight: 800, color: '#0a2340', letterSpacing: '-0.02em' }}>
                             Frequently Asked Questions
                         </h2>
@@ -329,17 +334,76 @@ export default function LandingPage() {
                 </div>
             </section>
 
-            {/* ── FOOTER (Contact) ── */}
-            <footer id="contact" style={{ background: '#060f1a', padding: '52px 5% 32px', color: '#9ca3af' }}>
+            {/* ── CONTACT US (Global Locations) ── */}
+            <section id="contact" style={{ background: 'white', padding: '100px 5%' }}>
+                <div style={{ maxWidth: 1200, margin: '0 auto' }}>
+                    <div style={{ textAlign: 'center', marginBottom: 60 }}>
+                        <div style={{ color: '#00a3e0', fontWeight: 800, fontSize: '0.8rem', textTransform: 'uppercase', letterSpacing: '0.15em', marginBottom: 12 }}>Contact Us</div>
+                        <h2 style={{ fontSize: 'clamp(2rem, 4vw, 3rem)', fontWeight: 800, color: '#0a2340', letterSpacing: '-0.02em', marginBottom: 20 }}>Our Global Presence</h2>
+                    </div>
+
+                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: 40 }}>
+                        {[
+                            {
+                                city: 'Singapore',
+                                country: '',
+                                company: 'Globalisor Pte. Ltd.',
+                                address: '#23-08, SBF Center, 160 Robinson Road, Singapore 068914',
+                                image: '/singapore_location_1773125190004.png' // Artifact path (relative to artifact dir)
+                            },
+                            {
+                                city: 'Oxford',
+                                country: 'UK',
+                                company: 'Cox Hinkins & Co.',
+                                address: 'The Old Dairy, 12 Stephen Rd, Headington, Oxford OX3 9AY, United Kingdom',
+                                image: '/oxford_location_1773125206302.png'
+                            },
+                            {
+                                city: 'Bangalore',
+                                country: 'India',
+                                company: 'Chaplot Ventures Pvt. Ltd.',
+                                address: '27th Main Road, Near Power station, 2nd Sector, HSR Layout, Bengaluru, India 560102',
+                                image: '/bangalore_location_1773125219586.png'
+                            }
+                        ].map((loc, idx) => (
+                            <div key={idx} style={{ textAlign: 'center' }}>
+                                <div style={{ 
+                                    width: '100%', 
+                                    aspectRatio: '16/10', 
+                                    borderRadius: 16, 
+                                    overflow: 'hidden', 
+                                    marginBottom: 24,
+                                    boxShadow: '0 10px 30px rgba(0,0,0,0.1)'
+                                }}>
+                                    <img 
+                                        src={loc.image} 
+                                        alt={loc.city} 
+                                        style={{ width: '100%', height: '100%', objectFit: 'cover' }} 
+                                    />
+                                </div>
+                                <h3 style={{ fontSize: '1.25rem', fontWeight: 700, color: '#0a2340', marginBottom: 8 }}>
+                                    {loc.city} {loc.country && `- ${loc.country}`}
+                                </h3>
+                                <div style={{ color: '#ff6b6b', fontWeight: 700, fontSize: '1rem', marginBottom: 12 }}>
+                                    {loc.company}
+                                </div>
+                                <div style={{ color: '#6b7280', fontSize: '0.9rem', lineHeight: 1.6, maxWidth: 280, margin: '0 auto' }}>
+                                    {loc.address}
+                                </div>
+                            </div>
+                        ))}
+                    </div>
+                </div>
+            </section>
+
+            {/* ── FOOTER ── */}
+            <footer style={{ background: '#060f1a', padding: '52px 5% 32px', color: '#9ca3af' }}>
                 <div style={{ maxWidth: 1200, margin: '0 auto' }}>
                     <div style={{ display: 'flex', justifyContent: 'space-between', flexWrap: 'wrap', gap: 32, marginBottom: 40 }}>
-                        <div>
+                        <div style={{ flex: 1, minWidth: 260 }}>
                             <GlobalisorLogo variant="dark" size="md" />
-                            <p style={{ fontSize: '0.8rem', lineHeight: 1.7, maxWidth: 260, marginTop: 14 }}>
+                            <p style={{ fontSize: '0.85rem', lineHeight: 1.7, marginTop: 14 }}>
                                 Singapore's trusted platform for business registration, KYC verification, and corporate compliance.
-                            </p>
-                            <p style={{ fontSize: '0.72rem', color: '#4b5563', marginTop: 10 }}>
-                                23-08, SBF Center, 160 Robinson Road, Singapore 068914
                             </p>
                         </div>
                         {[

@@ -2,7 +2,8 @@ import React, { useState } from 'react';
 import { useAppData } from '../../context/AppContext.jsx';
 import { useAuth } from '../../context/AuthContext.jsx';
 import StatusBadge from '../../components/shared/StatusBadge.jsx';
-import { CheckCircle, XCircle, Eye } from 'lucide-react';
+import { CheckCircle, XCircle, Eye, Search } from 'lucide-react';
+import DateRangeFilter from '../../components/shared/DateRangeFilter.jsx';
 
 function Field({ label, value }) {
     return (
@@ -17,13 +18,37 @@ export default function KYCVerification() {
     const { db, updateKYC } = useAppData();
     const { user } = useAuth();
     const [selectedId, setSelectedId] = useState(null);
+    const [search, setSearch] = useState('');
+    const [startDate, setStartDate] = useState('');
+    const [endDate, setEndDate] = useState('');
+
+    const handleRangeChange = (start, end) => {
+        setStartDate(start);
+        setEndDate(end);
+    };
 
     // KYC records for applications I'm assigned to
     const kycList = db.kycRecords.map(k => {
         const app = db.applications.find(a => a.application_id === k.application_id);
         const client = db.users.find(u => u.user_id === k.client_user_id);
-        return { ...k, business_name: app?.business_name, assigned_staff_id: app?.assigned_staff_id, client_name: client?.full_name };
-    }).filter(k => k.assigned_staff_id === user?.id);
+        return { ...k, business_name: app?.business_name, assigned_staff_id: app?.assigned_staff_id, client_name: client?.full_name, created_at: app?.created_at };
+    }).filter(k => {
+        const isAssigned = k.assigned_staff_id === user?.id;
+        const q = search.toLowerCase();
+        const matchSearch = (k.business_name || '').toLowerCase().includes(q) || (k.client_name || '').toLowerCase().includes(q);
+
+        let matchDate = true;
+        if (startDate || endDate) {
+            const createdDate = new Date(k.created_at);
+            if (startDate) matchDate = matchDate && createdDate >= new Date(startDate);
+            if (endDate) {
+                const endLimit = new Date(endDate);
+                endLimit.setHours(23, 59, 59, 999);
+                matchDate = matchDate && createdDate <= endLimit;
+            }
+        }
+        return isAssigned && matchSearch && matchDate;
+    });
 
     const selected = selectedId ? kycList.find(k => k.kyc_id === selectedId) : (kycList[0] || null);
 
@@ -34,7 +59,19 @@ export default function KYCVerification() {
 
     return (
         <div>
-            <div className="page-header">
+            <div className="page-header flex flex-wrap justify-between items-center gap-4">
+                <h1>KYC Verification</h1>
+                <div style={{ display: 'flex', gap: 10, alignItems: 'center' }}>
+                    <div className="search-input" style={{ width: 240 }}>
+                        <Search size={14} style={{ color: 'var(--grey-400)' }} />
+                        <input placeholder="Search business or client..." value={search} onChange={e => setSearch(e.target.value)} />
+                    </div>
+                    <DateRangeFilter 
+                        startDate={startDate} 
+                        endDate={endDate} 
+                        onRangeChange={handleRangeChange} 
+                    />
+                </div>
             </div>
 
             <div style={{ display: 'grid', gridTemplateColumns: '280px 1fr', gap: 20 }}>

@@ -49,7 +49,9 @@ export default function ClientDashboard() {
 
     return (
         <div>
-            <div className="page-header" style={{ justifyContent: 'flex-end', display: 'flex' }}>
+            <div className="page-header">
+                <h1>Client Dashboard</h1>
+                <div style={{ flex: 1 }} />
                 {unread > 0 && (
                     <button
                         style={{ background: '#fee2e2', color: '#dc2626', padding: '6px 14px', borderRadius: 8, fontWeight: 600, fontSize: '0.875rem', border: 'none', cursor: 'pointer' }}

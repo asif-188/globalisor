@@ -1,42 +1,79 @@
 import React, { useState } from 'react';
 import { useAppData } from '../../context/AppContext.jsx';
 import { useAuth } from '../../context/AuthContext.jsx';
-import { UserPlus, Trash2, Search } from 'lucide-react';
+import { UserPlus, Trash2, Search, Edit2, AlertTriangle, X } from 'lucide-react';
+import DateRangeFilter from '../../components/shared/DateRangeFilter.jsx';
 
 export default function StaffManagement() {
-    const { db, addStaffMember } = useAppData();
+    const { db, addStaffMember, updateStaffMember, deleteStaffMember } = useAppData();
     const { user } = useAuth();
     const [search, setSearch] = useState('');
     const [startDate, setStartDate] = useState('');
     const [endDate, setEndDate] = useState('');
-    const [showModal, setShowModal] = useState(false);
+    
+    // Modals
+    const [showStaffModal, setShowStaffModal] = useState(false);
+    const [showDeleteModal, setShowDeleteModal] = useState(false);
+    const [editingStaff, setEditingStaff] = useState(null);
+    const [deletingStaff, setDeletingStaff] = useState(null);
+    
     const [form, setForm] = useState({ fullName: '', email: '', phone: '' });
 
-    // All staff from shared users table
+    const handleRangeChange = (start, end) => {
+        setStartDate(start);
+        setEndDate(end);
+    };
+
     const staffUsers = db.users.filter(u => u.role === 'staff' && !u.deleted_at)
         .filter(u => {
             const q = search.toLowerCase();
-            const matchesSearch = u.full_name.toLowerCase().includes(q) || u.email.toLowerCase().includes(q);
+            const matchesSearch = (u.full_name || '').toLowerCase().includes(q) || (u.email || '').toLowerCase().includes(q);
 
             let matchesDate = true;
             if (startDate || endDate) {
                 const createdDate = new Date(u.created_at);
                 if (startDate) matchesDate = matchesDate && createdDate >= new Date(startDate);
                 if (endDate) {
-                    const end = new Date(endDate);
-                    end.setHours(23, 59, 59, 999);
-                    matchesDate = matchesDate && createdDate <= end;
+                    const endLimit = new Date(endDate);
+                    endLimit.setHours(23, 59, 59, 999);
+                    matchesDate = matchesDate && createdDate <= endLimit;
                 }
             }
-
             return matchesSearch && matchesDate;
         });
 
-    const handleAdd = () => {
+    const openStaffModal = (staff = null) => {
+        if (staff) {
+            setEditingStaff(staff);
+            setForm({ fullName: staff.full_name, email: staff.email, phone: staff.phone });
+        } else {
+            setEditingStaff(null);
+            setForm({ fullName: '', email: '', phone: '' });
+        }
+        setShowStaffModal(true);
+    };
+
+    const handleSubmit = () => {
         if (!form.fullName || !form.email) return;
-        addStaffMember({ fullName: form.fullName, email: form.email, phone: form.phone });
-        setForm({ fullName: '', email: '', phone: '' });
-        setShowModal(false);
+        if (editingStaff) {
+            updateStaffMember(editingStaff.user_id, form);
+        } else {
+            addStaffMember(form);
+        }
+        setShowStaffModal(false);
+    };
+
+    const confirmDelete = (staff) => {
+        setDeletingStaff(staff);
+        setShowDeleteModal(true);
+    };
+
+    const handleDelete = () => {
+        if (deletingStaff) {
+            deleteStaffMember(deletingStaff.user_id);
+            setShowDeleteModal(false);
+            setDeletingStaff(null);
+        }
     };
 
     const getAssignedCount = (staffId) =>
@@ -48,6 +85,7 @@ export default function StaffManagement() {
     return (
         <div>
             <div className="page-header">
+                <h1>Staff Management</h1>
             </div>
 
             <div className="card" style={{ padding: 0 }}>
@@ -57,18 +95,14 @@ export default function StaffManagement() {
                             <Search size={14} style={{ color: 'var(--grey-400)' }} />
                             <input placeholder="Search by name or email..." value={search} onChange={e => setSearch(e.target.value)} />
                         </div>
-                        <div style={{ display: 'flex', gap: 10, alignItems: 'center', marginRight: 'auto' }}>
-                            <span style={{ fontSize: '0.8rem', color: '#6b7280' }}>From:</span>
-                            <input type="date" className="btn btn-outline btn-sm" style={{ padding: '6px 10px', fontWeight: 500, fontSize: '0.8rem' }} value={startDate} onChange={e => setStartDate(e.target.value)} />
-                            <span style={{ fontSize: '0.8rem', color: '#6b7280' }}>To:</span>
-                            <input type="date" className="btn btn-outline btn-sm" style={{ padding: '6px 10px', fontWeight: 500, fontSize: '0.8rem' }} value={endDate} onChange={e => setEndDate(e.target.value)} />
-                            {(startDate || endDate) && (
-                                <button className="btn btn-ghost btn-sm" onClick={() => { setStartDate(''); setEndDate(''); }} style={{ color: '#dc2626', padding: '4px 8px' }}>
-                                    Clear
-                                </button>
-                            )}
+                        <div style={{ display: 'flex', gap: 10, alignItems: 'center' }}>
+                            <DateRangeFilter 
+                                startDate={startDate} 
+                                endDate={endDate} 
+                                onRangeChange={handleRangeChange} 
+                            />
                         </div>
-                        <button className="btn btn-primary btn-sm" onClick={() => setShowModal(true)}>
+                        <button className="btn btn-primary btn-sm" onClick={() => openStaffModal()}>
                             <UserPlus size={14} /> Add Staff
                         </button>
                     </div>
@@ -77,18 +111,26 @@ export default function StaffManagement() {
                 <div className="table-wrapper">
                     <table>
                         <thead>
-                            <tr><th>Name</th><th>Email</th><th>Phone</th><th>Active Cases</th><th>Completed</th><th>Status</th></tr>
+                            <tr>
+                                <th>Name</th>
+                                <th>Email</th>
+                                <th>Phone</th>
+                                <th>Active Cases</th>
+                                <th>Completed</th>
+                                <th>Status</th>
+                                <th style={{ textAlign: 'right' }}>Actions</th>
+                            </tr>
                         </thead>
                         <tbody>
                             {staffUsers.length === 0 && (
-                                <tr><td colSpan={6} style={{ textAlign: 'center', padding: 24, color: '#9ca3af' }}>No staff found</td></tr>
+                                <tr><td colSpan={7} style={{ textAlign: 'center', padding: 24, color: '#9ca3af' }}>No staff found</td></tr>
                             )}
                             {staffUsers.map(s => (
                                 <tr key={s.user_id}>
                                     <td>
                                         <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
                                             <div style={{ width: 32, height: 32, borderRadius: '50%', background: s.avatar_color || '#1a56db', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'white', fontWeight: 700, fontSize: '0.75rem', flexShrink: 0 }}>
-                                                {s.full_name.split(' ').map(n => n[0]).join('').slice(0, 2)}
+                                                {s.full_name?.split(' ').map(n => n[0]).join('').slice(0, 2)}
                                             </div>
                                             <span style={{ fontWeight: 600, fontSize: '0.875rem' }}>{s.full_name}</span>
                                         </div>
@@ -108,6 +150,16 @@ export default function StaffManagement() {
                                             color: s.status === 'active' ? '#065f46' : '#6b7280',
                                         }}>{s.status}</span>
                                     </td>
+                                    <td style={{ textAlign: 'right' }}>
+                                        <div style={{ display: 'flex', gap: 6, justifyContent: 'flex-end' }}>
+                                            <button className="btn btn-ghost btn-sm" style={{ padding: 6 }} onClick={() => openStaffModal(s)} title="Edit Staff">
+                                                <Edit2 size={14} style={{ color: '#4b5563' }} />
+                                            </button>
+                                            <button className="btn btn-ghost btn-sm" style={{ padding: 6 }} onClick={() => confirmDelete(s)} title="Delete Staff">
+                                                <Trash2 size={14} style={{ color: '#dc2626' }} />
+                                            </button>
+                                        </div>
+                                    </td>
                                 </tr>
                             ))}
                         </tbody>
@@ -115,12 +167,13 @@ export default function StaffManagement() {
                 </div>
             </div>
 
-            {showModal && (
-                <div className="modal-overlay" onClick={() => setShowModal(false)}>
+            {/* Add/Edit Modal */}
+            {showStaffModal && (
+                <div className="modal-overlay" onClick={() => setShowStaffModal(false)}>
                     <div className="modal" onClick={e => e.stopPropagation()}>
                         <div className="modal-header">
-                            <div className="modal-title">Add Staff Member</div>
-                            <button className="modal-close" onClick={() => setShowModal(false)}>×</button>
+                            <div className="modal-title">{editingStaff ? 'Edit Staff Member' : 'Add Staff Member'}</div>
+                            <button className="modal-close" onClick={() => setShowStaffModal(false)}><X size={18} /></button>
                         </div>
                         <div className="form-group">
                             <label className="form-label">Full Name *</label>
@@ -135,10 +188,35 @@ export default function StaffManagement() {
                             <input className="form-input" placeholder="+65 8xxx xxxx" value={form.phone} onChange={e => setForm(p => ({ ...p, phone: e.target.value }))} />
                         </div>
                         <div className="flex gap-3">
-                            <button className="btn btn-primary" style={{ flex: 1, justifyContent: 'center' }} onClick={handleAdd}>
-                                <UserPlus size={14} /> Add Staff
+                            <button className="btn btn-primary" style={{ flex: 1, justifyContent: 'center' }} onClick={handleSubmit}>
+                                {editingStaff ? 'Update Staff' : 'Add Staff'}
                             </button>
-                            <button className="btn btn-ghost" style={{ flex: 1, justifyContent: 'center' }} onClick={() => setShowModal(false)}>Cancel</button>
+                            <button className="btn btn-ghost" style={{ flex: 1, justifyContent: 'center' }} onClick={() => setShowStaffModal(false)}>Cancel</button>
+                        </div>
+                    </div>
+                </div>
+            )}
+
+            {/* Delete Confirmation Modal (Two-Step Protection) */}
+            {showDeleteModal && (
+                <div className="modal-overlay" onClick={() => setShowDeleteModal(false)}>
+                    <div className="modal" style={{ maxWidth: 400 }} onClick={e => e.stopPropagation()}>
+                        <div style={{ textAlign: 'center', padding: '10px 0' }}>
+                            <div style={{ width: 48, height: 48, background: '#fee2e2', color: '#dc2626', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 16px' }}>
+                                <AlertTriangle size={24} />
+                            </div>
+                            <h3 style={{ fontSize: '1.125rem', fontWeight: 700, color: '#111827', marginBottom: 8 }}>Confirm Deletion</h3>
+                            <p style={{ fontSize: '0.875rem', color: '#6b7280', marginBottom: 24 }}>
+                                Are you sure you want to delete <strong>{deletingStaff?.full_name}</strong>? This action will deactivate their account.
+                            </p>
+                        </div>
+                        <div className="flex flex-col gap-2">
+                            <button className="btn btn-primary" style={{ background: '#dc2626', borderColor: '#dc2626', color: 'white' }} onClick={handleDelete}>
+                                Yes, Confirm Delete
+                            </button>
+                            <button className="btn btn-ghost" onClick={() => setShowDeleteModal(false)}>
+                                No, Cancel
+                            </button>
                         </div>
                     </div>
                 </div>

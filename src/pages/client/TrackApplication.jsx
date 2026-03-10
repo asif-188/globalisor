@@ -40,6 +40,7 @@ export default function TrackApplication() {
     return (
         <div>
             <div className="page-header">
+                <h1>Track Application</h1>
             </div>
 
             {/* App Info */}

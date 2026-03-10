@@ -33,6 +33,7 @@ export function AppProvider({ children }) {
         complianceEvents: COMPLIANCE_EVENTS,
         vaultDocuments: VAULT_DOCUMENTS,
         statusHistory: [],
+        drafts: {}, // { userId: { step: 0, bizForm, dirForm, kycForm, docs } }
     });
 
     // ── Internal helpers ──────────────────────────────────────────────────────
@@ -342,6 +343,34 @@ export function AppProvider({ children }) {
     }, []);
 
     /**
+     * ADMIN updates a staff member.
+     */
+    const updateStaffMember = useCallback((userId, staffData) => {
+        setDb(prev => ({
+            ...prev,
+            users: prev.users.map(u =>
+                u.user_id === userId
+                    ? { ...u, full_name: staffData.fullName, email: staffData.email, phone: staffData.phone, updated_at: now() }
+                    : u
+            )
+        }));
+    }, []);
+
+    /**
+     * ADMIN deletes a staff member (soft delete).
+     */
+    const deleteStaffMember = useCallback((userId) => {
+        setDb(prev => ({
+            ...prev,
+            users: prev.users.map(u =>
+                u.user_id === userId
+                    ? { ...u, deleted_at: now(), status: 'inactive', updated_at: now() }
+                    : u
+            )
+        }));
+    }, []);
+
+    /**
      * Mark notification(s) as read.
      */
     const markNotificationsRead = useCallback((userId) => {
@@ -352,6 +381,26 @@ export function AppProvider({ children }) {
             ),
         }));
     }, []);
+
+    /**
+     * CLIENT saves a draft of their registration.
+     */
+    const saveDraft = useCallback((userId, draftData) => {
+        setDb(prev => ({
+            ...prev,
+            drafts: {
+                ...prev.drafts,
+                [userId]: draftData
+            }
+        }));
+    }, []);
+
+    /**
+     * CLIENT retrieves their registration draft.
+     */
+    const getDraft = useCallback((userId) => {
+        return db.drafts[userId] || null;
+    }, [db.drafts]);
 
     /**
      * Add a follow-up task.
@@ -488,7 +537,11 @@ export function AppProvider({ children }) {
             submitToACRA,
             completeApplication,
             addStaffMember,
+            updateStaffMember,
+            deleteStaffMember,
             markNotificationsRead,
+            saveDraft,
+            getDraft,
             addFollowup,
             // Read operations (selectors)
             getApplicationsForUser,

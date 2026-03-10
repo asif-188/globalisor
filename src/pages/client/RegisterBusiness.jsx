@@ -23,11 +23,12 @@ function StepBar({ current }) {
 
 export default function RegisterBusiness() {
     const navigate = useNavigate();
-    const { submitApplication } = useAppData();
+    const { submitApplication, saveDraft, getDraft } = useAppData();
     const { user } = useAuth();
     const [step, setStep] = useState(0);
     const [submitted, setSubmitted] = useState(false);
     const [newAppId, setNewAppId] = useState(null);
+    const [lastSaved, setLastSaved] = useState(null);
 
     const [bizForm, setBizForm] = useState({
         type: 'Private Limited (Pte. Ltd.)', name: '', nature: '', address: '', capital: '1000', currency: 'SGD',
@@ -40,8 +41,29 @@ export default function RegisterBusiness() {
     });
     const [docs, setDocs] = useState({ passport: false, addressProof: false, selfie: false });
 
+    // Load draft on mount
+    React.useEffect(() => {
+        if (user?.id) {
+            const draft = getDraft(user.id);
+            if (draft) {
+                setStep(draft.step || 0);
+                if (draft.bizForm) setBizForm(draft.bizForm);
+                if (draft.dirForm) setDirForm(draft.dirForm);
+                if (draft.kycForm) setKycForm(draft.kycForm);
+                if (draft.docs) setDocs(draft.docs);
+            }
+        }
+    }, [user?.id, getDraft]);
+
     const next = () => { if (step < STEPS.length - 1) setStep(step + 1); };
     const prev = () => { if (step > 0) setStep(step - 1); };
+
+    const handleSave = () => {
+        if (!user?.id) return;
+        saveDraft(user.id, { step, bizForm, dirForm, kycForm, docs });
+        setLastSaved(new Date().toLocaleTimeString());
+        setTimeout(() => setLastSaved(null), 3000);
+    };
 
     const handleSubmit = () => {
         // Write to shared AppContext — immediately visible in Admin + Staff portals
@@ -55,9 +77,12 @@ export default function RegisterBusiness() {
         });
         setNewAppId(appId);
         setSubmitted(true);
+        // Clear draft after successful submission
+        saveDraft(user.id, null);
     };
 
     if (submitted) {
+        // ... (existing code for submitted state)
         return (
             <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center', padding: '64px 24px' }}>
                 <div style={{
@@ -86,13 +111,14 @@ export default function RegisterBusiness() {
     return (
         <div>
             <div className="page-header">
+                <h1>Register Business</h1>
             </div>
 
             <div style={{ maxWidth: 720, margin: '0 auto' }}>
                 <StepBar current={step} />
 
                 <div className="card">
-                    {/* Step 0: Business Details */}
+                    {/* ... (existing steps 0-4) ... */}
                     {step === 0 && (
                         <div>
                             <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 20 }}>
@@ -131,8 +157,6 @@ export default function RegisterBusiness() {
                             </div>
                         </div>
                     )}
-
-                    {/* Step 1: Director */}
                     {step === 1 && (
                         <div>
                             <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 20 }}>
@@ -159,8 +183,6 @@ export default function RegisterBusiness() {
                             ))}
                         </div>
                     )}
-
-                    {/* Step 2: KYC */}
                     {step === 2 && (
                         <div>
                             <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 20 }}>
@@ -206,8 +228,6 @@ export default function RegisterBusiness() {
                             </div>
                         </div>
                     )}
-
-                    {/* Step 3: Documents */}
                     {step === 3 && (
                         <div>
                             <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 20 }}>
@@ -238,8 +258,6 @@ export default function RegisterBusiness() {
                             ))}
                         </div>
                     )}
-
-                    {/* Step 4: Review */}
                     {step === 4 && (
                         <div>
                             <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 20 }}>
@@ -286,10 +304,15 @@ export default function RegisterBusiness() {
                     )}
 
                     {/* Navigation */}
-                    <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: 28 }}>
-                        <button className="btn btn-ghost" onClick={prev} disabled={step === 0}>
-                            <ArrowLeft size={16} /> Previous
-                        </button>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: 28, alignItems: 'center' }}>
+                        <div style={{ display: 'flex', gap: 12 }}>
+                            <button className="btn btn-ghost" onClick={prev} disabled={step === 0}>
+                                <ArrowLeft size={16} /> Previous
+                            </button>
+                            <button className="btn btn-outline" onClick={handleSave} style={{ borderColor: 'var(--primary)', color: 'var(--primary)' }}>
+                                {lastSaved ? `Saved at ${lastSaved} ✓` : 'Save Draft'}
+                            </button>
+                        </div>
                         {step < STEPS.length - 1 ? (
                             <button className="btn btn-primary" onClick={next}>
                                 Next Step <ArrowRight size={16} />

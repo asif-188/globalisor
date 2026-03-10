@@ -1,30 +1,91 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Download, TrendingUp } from 'lucide-react';
-
-const MONTHLY = [
-    { month: 'Oct', apps: 18, completed: 14, pct: 78 },
-    { month: 'Nov', apps: 24, completed: 20, pct: 83 },
-    { month: 'Dec', apps: 19, completed: 17, pct: 89 },
-    { month: 'Jan', apps: 31, completed: 26, pct: 84 },
-    { month: 'Feb', apps: 27, completed: 23, pct: 85 },
-    { month: 'Mar', apps: 35, completed: 29, pct: 83 },
-];
-
-const TOP_STAFF = [
-    { name: 'Sarah Stafford', completed: 54, rate: '96%', color: '#1a56db' },
-    { name: 'Daniel Wong', completed: 67, rate: '94%', color: '#7c3aed' },
-    { name: 'James Tan', completed: 32, rate: '91%', color: '#059669' },
-    { name: 'Mei Lin', completed: 41, rate: '89%', color: '#d97706' },
-    { name: 'Kevin Lim', completed: 18, rate: '85%', color: '#0891b2' },
-];
+import { useAppData } from '../../context/AppContext.jsx';
+import DateRangeFilter from '../../components/shared/DateRangeFilter.jsx';
 
 export default function Reports() {
-    const maxApps = Math.max(...MONTHLY.map(m => m.apps));
+    const { db } = useAppData();
+    const [startDate, setStartDate] = useState('');
+    const [endDate, setEndDate] = useState('');
+
+    const handleRangeChange = (start, end) => {
+        setStartDate(start);
+        setEndDate(end);
+    };
+
+    // Derive data from DB based on dates
+    const filteredApps = db.applications.filter(a => {
+        if (!startDate && !endDate) return true;
+        const createdDate = new Date(a.created_at);
+        let match = true;
+        if (startDate) match = match && createdDate >= new Date(startDate);
+        if (endDate) {
+            const endLimit = new Date(endDate);
+            endLimit.setHours(23, 59, 59, 999);
+            match = match && createdDate <= endLimit;
+        }
+        return match;
+    });
+
+    // Group by month for chart
+    const monthlyData = {};
+    const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+    
+    // Initialize last 6 months if no range
+    let displayMonths = months;
+    if (!startDate && !endDate) {
+        const now = new Date();
+        displayMonths = [];
+        for (let i = 5; i >= 0; i--) {
+            const d = new Date(now.getFullYear(), now.getMonth() - i, 1);
+            displayMonths.push(months[d.getMonth()]);
+        }
+    }
+
+    displayMonths.forEach(m => monthlyData[m] = { apps: 0, completed: 0 });
+
+    filteredApps.forEach(a => {
+        const d = new Date(a.created_at);
+        const m = months[d.getMonth()];
+        if (monthlyData[m]) {
+            monthlyData[m].apps++;
+            if (a.status === 'Completed') monthlyData[m].completed++;
+        }
+    });
+
+    const MONTHLY = displayMonths.map(m => ({
+        month: m,
+        apps: monthlyData[m].apps,
+        completed: monthlyData[m].completed,
+        pct: monthlyData[m].apps ? Math.round((monthlyData[m].completed / monthlyData[m].apps) * 100) : 0
+    }));
+
+    // Derived staff stats
+    const staffStats = db.users.filter(u => u.role === 'staff').map(s => {
+        const completed = db.applications.filter(a => a.assigned_staff_id === s.user_id && a.status === 'Completed').length;
+        const total = db.applications.filter(a => a.assigned_staff_id === s.user_id).length;
+        return {
+            name: s.full_name,
+            completed,
+            rate: total ? Math.round((completed / total) * 100) + '%' : '0%',
+            color: '#' + Math.floor(Math.random()*16777215).toString(16) // Random but could be fixed
+        };
+    }).sort((a, b) => b.completed - a.completed).slice(0, 5);
+
+    const maxApps = Math.max(...MONTHLY.map(m => m.apps), 5); // Fallback to 5 to avoid div by zero
 
     return (
         <div>
-            <div className="page-header flex justify-between items-center">
-                <button className="btn btn-outline btn-sm"><Download size={15} /> Export PDF</button>
+            <div className="page-header flex flex-wrap justify-between items-center gap-4">
+                <h1>Reports & Analytics</h1>
+                <div style={{ display: 'flex', gap: 12, alignItems: 'center' }}>
+                    <DateRangeFilter 
+                        startDate={startDate} 
+                        endDate={endDate} 
+                        onRangeChange={handleRangeChange} 
+                    />
+                    <button className="btn btn-outline btn-sm"><Download size={15} /> Export PDF</button>
+                </div>
             </div>
 
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 340px', gap: 20, marginBottom: 20 }}>
@@ -83,7 +144,7 @@ export default function Reports() {
                         <div className="card-title">Staff Performance</div>
                     </div>
                     <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
-                        {TOP_STAFF.map((s, i) => (
+                        {staffStats.map((s, i) => (
                             <div key={s.name}>
                                 <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 5 }}>
                                     <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>

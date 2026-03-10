@@ -1,12 +1,18 @@
 import React, { useState } from 'react';
 import { useAppData } from '../../context/AppContext.jsx';
 import { Search } from 'lucide-react';
+import DateRangeFilter from '../../components/shared/DateRangeFilter.jsx';
 
 export default function UserManagement() {
     const { db } = useAppData();
     const [search, setSearch] = useState('');
     const [startDate, setStartDate] = useState('');
     const [endDate, setEndDate] = useState('');
+
+    const handleRangeChange = (start, end) => {
+        setStartDate(start);
+        setEndDate(end);
+    };
 
     const clients = db.users.filter(u => u.role === 'client' && !u.deleted_at)
         .filter(u => {
@@ -37,6 +43,7 @@ export default function UserManagement() {
     return (
         <div>
             <div className="page-header">
+                <h1>User Management</h1>
             </div>
 
             <div className="card" style={{ padding: 0 }}>
@@ -47,15 +54,11 @@ export default function UserManagement() {
                             <input placeholder="Search by name or email..." value={search} onChange={e => setSearch(e.target.value)} />
                         </div>
                         <div style={{ display: 'flex', gap: 10, alignItems: 'center' }}>
-                            <span style={{ fontSize: '0.8rem', color: '#6b7280' }}>From:</span>
-                            <input type="date" className="btn btn-outline btn-sm" style={{ padding: '6px 10px', fontWeight: 500, fontSize: '0.8rem' }} value={startDate} onChange={e => setStartDate(e.target.value)} />
-                            <span style={{ fontSize: '0.8rem', color: '#6b7280' }}>To:</span>
-                            <input type="date" className="btn btn-outline btn-sm" style={{ padding: '6px 10px', fontWeight: 500, fontSize: '0.8rem' }} value={endDate} onChange={e => setEndDate(e.target.value)} />
-                            {(startDate || endDate) && (
-                                <button className="btn btn-ghost btn-sm" onClick={() => { setStartDate(''); setEndDate(''); }} style={{ color: '#dc2626', padding: '4px 8px' }}>
-                                    Clear
-                                </button>
-                            )}
+                            <DateRangeFilter 
+                                startDate={startDate} 
+                                endDate={endDate} 
+                                onRangeChange={handleRangeChange} 
+                            />
                         </div>
                         <div style={{ fontSize: '0.75rem', color: '#9ca3af', marginLeft: 'auto' }}>{clients.length} clients</div>
                     </div>

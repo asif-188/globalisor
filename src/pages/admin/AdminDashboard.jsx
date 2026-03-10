@@ -78,7 +78,9 @@ export default function AdminDashboard() {
 
     return (
         <div>
-
+            <div className="page-header">
+                <h1>Admin Dashboard</h1>
+            </div>
             <div className="stats-grid">
                 {statCards.map(s => (
                     <StatCard key={s.label} icon={s.icon} label={s.label} value={s.value} color={s.color} />

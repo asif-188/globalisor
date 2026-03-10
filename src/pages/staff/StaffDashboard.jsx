@@ -48,8 +48,9 @@ export default function StaffDashboard() {
 
     return (
         <div>
-
-
+            <div className="page-header">
+                <h1>Staff Dashboard</h1>
+            </div>
             <div className="stats-grid">
                 {stats.map(s => <StatCard key={s.label} icon={s.icon} label={s.label} value={s.value} color={s.color} />)}
             </div>

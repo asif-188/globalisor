@@ -81,6 +81,7 @@ export default function UploadDocuments() {
     return (
         <div>
             <div className="page-header">
+                <h1>Upload Documents</h1>
             </div>
 
             {!application && (
