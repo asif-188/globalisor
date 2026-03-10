@@ -1,0 +1,31 @@
+<svg width="120" height="120" viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <circle cx="60" cy="60" r="28" fill="#1fb8c3" />
+    <defs>
+        <radialGradient id="globeShade" cx="40%" cy="35%" r="70%">
+            <stop offset="0%" stopColor="white" stopOpacity="0.18" />
+            <stop offset="100%" stopColor="#0a8c96" stopOpacity="0.55" />
+        </radialGradient>
+    </defs>
+    <ellipse cx="60" cy="60" r="28" fill="url(#globeShade)" />
+    <ellipse cx="60" cy="60" rx="28" ry="10" stroke="#158e97" strokeWidth="1.5" fill="none" />
+    <ellipse cx="60" cy="60" rx="28" ry="20" stroke="#158e97" strokeWidth="1.5" fill="none" />
+    <line x1="60" y1="32" x2="60" y2="88" stroke="#158e97" strokeWidth="1.5" />
+    <ellipse cx="60" cy="60" rx="12" ry="28" stroke="#158e97" strokeWidth="1.5" fill="none" />
+    <line x1="32" y1="60" x2="88" y2="60" stroke="#158e97" strokeWidth="1.5" />
+    <line x1="60" y1="32" x2="60" y2="16" stroke="#f0a500" strokeWidth="5" strokeLinecap="round" />
+    <circle cx="60" cy="10" r="7" fill="#f07020" />
+    <line x1="79" y1="41" x2="90" y2="26" stroke="#f0a500" strokeWidth="5" strokeLinecap="round" />
+    <circle cx="96" cy="20" r="7" fill="#e8619a" />
+    <line x1="88" y1="60" x2="104" y2="60" stroke="#f0a500" strokeWidth="5" strokeLinecap="round" />
+    <circle cx="110" cy="60" r="7" fill="#f07020" />
+    <line x1="79" y1="79" x2="90" y2="94" stroke="#f0a500" strokeWidth="5" strokeLinecap="round" />
+    <circle cx="96" cy="100" r="7" fill="#e8619a" />
+    <line x1="60" y1="88" x2="60" y2="104" stroke="#f0a500" strokeWidth="5" strokeLinecap="round" />
+    <circle cx="60" cy="110" r="7" fill="#f07020" />
+    <line x1="41" y1="79" x2="30" y2="94" stroke="#f0a500" strokeWidth="5" strokeLinecap="round" />
+    <circle cx="24" cy="100" r="7" fill="#e8619a" />
+    <line x1="32" y1="60" x2="16" y2="60" stroke="#f0a500" strokeWidth="5" strokeLinecap="round" />
+    <circle cx="10" cy="60" r="7" fill="#f07020" />
+    <line x1="41" y1="41" x2="30" y2="26" stroke="#f0a500" strokeWidth="5" strokeLinecap="round" />
+    <circle cx="24" cy="20" r="7" fill="#e8619a" />
+</svg>

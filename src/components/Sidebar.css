@@ -1,0 +1,169 @@
+.sidebar {
+    width: var(--sidebar-width);
+    height: 100vh;
+    background: var(--bg-sidebar);
+    border-right: 1px solid var(--border);
+    display: flex;
+    flex-direction: column;
+    position: fixed;
+    left: 0;
+    top: 0;
+    padding: 2rem 0;
+    /* Removed horizontal padding to allow full-width items */
+    z-index: 100;
+}
+
+.sidebar-brand {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 3rem;
+    padding: 0 1.5rem;
+    /* Apply padding here instead */
+}
+
+.brand-icon {
+    width: 40px;
+    height: 40px;
+    background: var(--primary);
+    color: white;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 800;
+    font-size: 1.25rem;
+    font-family: 'Outfit';
+}
+
+.brand-name {
+    font-size: 1.25rem;
+    letter-spacing: -0.5px;
+    line-height: 1.2;
+}
+
+.brand-tagline {
+    font-size: 0.7rem;
+    font-weight: 600;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.nav-group {
+    margin-bottom: 2rem;
+}
+
+.nav-title {
+    font-size: 0.65rem;
+    font-weight: 800;
+    color: #94A3B8;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    margin-bottom: 0.75rem;
+    padding: 0 1.5rem;
+    /* Match brand padding */
+}
+
+.sidebar-nav {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    /* Sharp edge-to-edge usually looks better without gaps between full-width items */
+}
+
+.nav-item {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.85rem 1.5rem;
+    /* Increased horizontal padding to match brand */
+    background: transparent;
+    color: var(--text-main);
+    text-align: left;
+    font-size: 0.9rem;
+    font-weight: 600;
+    transition: var(--transition);
+    width: 100%;
+    /* Explicitly full width */
+    border-radius: 0;
+    /* Edge to edge removal of radius */
+}
+
+.nav-item:hover {
+    background: #F8FAFC;
+    color: var(--primary);
+}
+
+.nav-item.active {
+    background: #F1F5F9;
+    color: var(--primary);
+    position: relative;
+}
+
+.nav-item.active::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    height: 100%;
+    /* Full height indicator */
+    width: 4px;
+    background: var(--primary);
+}
+
+.nav-icon {
+    font-size: 1.1rem;
+}
+
+.sidebar-footer {
+    margin-top: auto;
+    padding: 1.5rem;
+}
+
+.user-card {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.75rem;
+    border-radius: 12px;
+    background: #F8FAFC;
+    position: relative;
+}
+
+.avatar {
+    width: 36px;
+    height: 36px;
+    background: #CBD5E1;
+    color: var(--primary);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 0.8rem;
+}
+
+.user-name {
+    font-weight: 700;
+    font-size: 0.85rem;
+    color: var(--text-bold);
+    line-height: 1;
+}
+
+.user-status {
+    color: var(--text-muted);
+    font-size: 0.7rem;
+    font-weight: 500;
+}
+
+.status-dot {
+    position: absolute;
+    right: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 6px;
+    height: 6px;
+    background: var(--secondary);
+    border-radius: 50%;
+}
