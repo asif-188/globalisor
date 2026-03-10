@@ -115,6 +115,7 @@ export default function StaffManagement() {
                                 <th>Name</th>
                                 <th>Email</th>
                                 <th>Phone</th>
+                                <th>Joined</th>
                                 <th>Active Cases</th>
                                 <th>Completed</th>
                                 <th>Status</th>
@@ -123,7 +124,7 @@ export default function StaffManagement() {
                         </thead>
                         <tbody>
                             {staffUsers.length === 0 && (
-                                <tr><td colSpan={7} style={{ textAlign: 'center', padding: 24, color: '#9ca3af' }}>No staff found</td></tr>
+                                <tr><td colSpan={8} style={{ textAlign: 'center', padding: 24, color: '#9ca3af' }}>No staff found</td></tr>
                             )}
                             {staffUsers.map(s => (
                                 <tr key={s.user_id}>
@@ -137,6 +138,9 @@ export default function StaffManagement() {
                                     </td>
                                     <td style={{ fontSize: '0.85rem', color: '#6b7280' }}>{s.email}</td>
                                     <td style={{ fontSize: '0.85rem', color: '#6b7280' }}>{s.phone || '—'}</td>
+                                    <td style={{ fontSize: '0.85rem', color: '#6b7280', fontWeight: 500 }}>
+                                        {s.created_at ? new Date(s.created_at).toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' }) : '—'}
+                                    </td>
                                     <td>
                                         <span style={{ fontWeight: 700, color: '#1a56db' }}>{getAssignedCount(s.user_id)}</span>
                                     </td>
