@@ -175,112 +175,135 @@
         .philosophy-text h2 { color: white; margin-bottom: 20px; font-size: 32px; }
         .philosophy-text p { color: rgba(255, 255, 255, 0.9); font-size: 16px; }
 
-        /* Roadmap Timeline */
-        .roadmap-container {
-            padding: 40px 0;
-            position: relative;
-        }
-
-        .timeline {
-            position: relative;
+        /* Roadmap Tree Layout */
+        .months-container {
+            display: flex;
+            flex-direction: column;
+            gap: 80px;
             margin-top: 60px;
         }
 
-        .timeline::before {
+        .month-block {
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(15px);
+            border-radius: 40px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 50px;
+            position: relative;
+            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.3);
+        }
+
+        .month-header {
+            text-align: center;
+            margin-bottom: 60px;
+            position: relative;
+        }
+
+        .month-header h2 {
+            font-size: 28px;
+            display: inline-block;
+            background: linear-gradient(135deg, var(--accent) 0%, var(--teal-dark) 100%);
+            padding: 12px 50px;
+            border-radius: 50px;
+            color: white;
+            box-shadow: 0 10px 30px rgba(32, 178, 170, 0.3);
+            font-weight: 800;
+            letter-spacing: 2px;
+        }
+
+        .month-header::after {
             content: '';
             position: absolute;
+            top: 100%;
             left: 50%;
-            transform: translateX(-50%);
-            width: 4px;
-            height: 100%;
-            background: var(--gray-mid);
-            border-radius: 2px;
+            width: 2px;
+            height: 40px;
+            background: rgba(255, 255, 255, 0.1);
         }
 
-        .sprint {
+        .weeks-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 25px;
             position: relative;
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-start;
-            margin-bottom: 80px;
-            width: 100%;
         }
 
-        .sprint.right {
-            flex-direction: row-reverse;
-        }
-
-        .sprint-dot {
+        .weeks-grid::before {
+            content: '';
             position: absolute;
-            left: 50%;
-            transform: translate(-50%, 0);
-            width: 20px;
-            height: 20px;
-            background: white;
-            border: 4px solid var(--accent);
-            border-radius: 50%;
-            z-index: 2;
+            top: -40px;
+            left: 12.5%;
+            right: 12.5%;
+            height: 2px;
+            background: rgba(255, 255, 255, 0.1);
         }
 
-        .sprint-content {
-            width: 45%;
+        .week-card {
+            background: rgba(255, 255, 255, 0.02);
             padding: 30px;
-            background: rgba(255, 255, 255, 0.03);
-            backdrop-filter: blur(6px);
-            border-radius: 20px;
-            position: relative;
-            z-index: 1;
+            border-radius: 28px;
+            border: 1px solid rgba(255, 255, 255, 0.06);
             transition: var(--transition);
-            border: 1px solid rgba(255, 255, 255, 0.08);
+            position: relative;
         }
 
-        .sprint-content:hover {
+        .week-card::before {
+            content: '';
+            position: absolute;
+            top: -40px;
+            left: 50%;
+            width: 2px;
+            height: 40px;
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .week-card:hover {
             background: rgba(255, 255, 255, 0.08);
-            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.3);
-            transform: scale(1.03);
+            transform: translateY(-12px);
             border-color: var(--accent);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
         }
 
-        .sprint-content h3 {
-            margin-bottom: 12px;
-            font-size: 20px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            color: #ffffff;
-        }
-
-        .sprint-content span { color: var(--accent); }
-
-        .sprint-date {
-            font-size: 13px;
+        .week-card h4 {
             color: var(--accent);
+            font-size: 14px;
             text-transform: uppercase;
-            letter-spacing: 1px;
-            font-weight: 700;
-            margin-bottom: 10px;
+            letter-spacing: 1.5px;
+            margin-bottom: 20px;
+            font-weight: 800;
             display: block;
+            border-bottom: 1px solid rgba(32, 178, 170, 0.2);
+            padding-bottom: 10px;
         }
 
-        .sprint-features li {
-            margin-bottom: 8px;
+        .week-card ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .week-card li {
             font-size: 14px;
             color: rgba(255, 255, 255, 0.7);
+            margin-bottom: 12px;
             display: flex;
-            align-items: center;
-            gap: 10px;
+            gap: 12px;
+            line-height: 1.4;
         }
 
-        .sprint.left .sprint-content { text-align: right; }
-        .sprint.right .sprint-content { text-align: left; }
-
-        .sprint.left .sprint-features li { justify-content: flex-end; }
-        .sprint.right .sprint-features li { justify-content: flex-start; }
-
-        .sprint-features li::before {
-            content: '•';
+        .week-card li::before {
+            content: '→';
             color: var(--accent);
             font-weight: bold;
+        }
+
+        @media (max-width: 1200px) {
+            .weeks-grid { grid-template-columns: repeat(2, 1fr); }
+            .weeks-grid::before, .week-card::before, .month-header::after { display: none; }
+        }
+
+        @media (max-width: 600px) {
+            .weeks-grid { grid-template-columns: 1fr; }
+            .month-block { padding: 30px 20px; }
         }
 
         /* Scope Cards */
@@ -447,147 +470,195 @@
         </div>
 
         <div class="roadmap-container">
-            <div class="timeline">
+            <div class="months-container">
                 
-                <!-- Sprint 1 -->
-                <div class="sprint left animate-in" style="animation-delay: 0.4s;">
-                    <div class="sprint-content">
-                        <span class="sprint-date">Apr 15 - Apr 29, 2026</span>
-                        <h3>Sprint 01: Project Planning <span>01</span></h3>
-                        <ul class="sprint-features">
-                            <li>Requirements & Architecture finalization</li>
-                            <li>System & Database design</li>
-                            <li><strong>UI/UX Planning</strong> & wireframing</li>
-                        </ul>
+                <!-- MONTH 1 -->
+                <div class="month-block animate-in" style="animation-delay: 0.4s;">
+                    <div class="month-header">
+                        <h2>MONTH 1 - CLIENT PORTAL & WEBSITE</h2>
                     </div>
-                    <div class="sprint-dot"></div>
+                    <div class="weeks-grid">
+                        <div class="week-card">
+                            <h4>Week 1</h4>
+                            <ul>
+                                <li>Analyze with Globalisor team</li>
+                                <li>Deep dive on existing process</li>
+                                <li>Compliance Integration research</li>
+                            </ul>
+                        </div>
+                        <div class="week-card">
+                            <h4>Week 2</h4>
+                            <ul>
+                                <li>Start with Client portal</li>
+                                <li>Sidebar Menu development</li>
+                                <li>Skeleton of portal structure</li>
+                            </ul>
+                        </div>
+                        <div class="week-card">
+                            <h4>Week 3</h4>
+                            <ul>
+                                <li>Upload documents by client</li>
+                                <li>All menus of Client portal go live</li>
+                            </ul>
+                        </div>
+                        <div class="week-card">
+                            <h4>Week 4</h4>
+                            <ul>
+                                <li>Document Vault implementation</li>
+                                <li>Bug Fixes & Refinement</li>
+                                <li>Complete testing of Client portal</li>
+                            </ul>
+                        </div>
+                    </div>
                 </div>
 
-                <!-- Sprint 2 -->
-                <div class="sprint right animate-in" style="animation-delay: 0.5s;">
-                    <div class="sprint-content">
-                        <span class="sprint-date">Apr 30 - May 14, 2026</span>
-                        <h3>Sprint 02: Core System Setup <span>02</span></h3>
-                        <ul class="sprint-features">
-                            <li><strong>Authentication System</strong></li>
-                            <li>Role-based access (Admin, Staff, Client)</li>
-                            <li>Base UI Framework & Project Setup</li>
-                        </ul>
+                <!-- MONTH 2 -->
+                <div class="month-block animate-in" style="animation-delay: 0.5s;">
+                    <div class="month-header">
+                        <h2>MONTH 2 - CORE SYSTEM & PERMISSIONS</h2>
                     </div>
-                    <div class="sprint-dot"></div>
+                    <div class="weeks-grid">
+                        <div class="week-card">
+                            <h4>Week 5</h4>
+                            <ul>
+                                <li>Architecture finalization</li>
+                                <li>Cloud environment setup</li>
+                            </ul>
+                        </div>
+                        <div class="week-card">
+                            <h4>Week 6</h4>
+                            <ul>
+                                <li>Authentication system</li>
+                                <li>Detailed Database design</li>
+                            </ul>
+                        </div>
+                        <div class="week-card">
+                            <h4>Week 7</h4>
+                            <ul>
+                                <li>Admin/Staff base UI</li>
+                                <li>Project foundation setup</li>
+                            </ul>
+                        </div>
+                        <div class="week-card">
+                            <h4>Week 8</h4>
+                            <ul>
+                                <li>Role-based Access (Admin, Staff, Client)</li>
+                                <li>Permission Engine logic</li>
+                            </ul>
+                        </div>
+                    </div>
                 </div>
 
-                <!-- Sprint 3 -->
-                <div class="sprint left animate-in" style="animation-delay: 0.6s;">
-                    <div class="sprint-content">
-                        <span class="sprint-date">May 15 - May 29, 2026</span>
-                        <h3>Sprint 03: Client Experience <span>03</span></h3>
-                        <ul class="sprint-features">
-                            <li><strong>Globalisor Website</strong> development</li>
-                            <li>Client onboarding & application forms</li>
-                            <li>Basic Client Dashboard interface</li>
-                        </ul>
+                <!-- MONTH 3 -->
+                <div class="month-block animate-in" style="animation-delay: 0.6s;">
+                    <div class="month-header">
+                        <h2>MONTH 3 - ADMIN & STAFF DASHBOARDS</h2>
                     </div>
-                    <div class="sprint-dot"></div>
+                    <div class="weeks-grid">
+                        <div class="week-card">
+                            <h4>Week 9</h4>
+                            <ul>
+                                <li>Admin Dashboard build</li>
+                                <li>Metrics & Analytics UI</li>
+                            </ul>
+                        </div>
+                        <div class="week-card">
+                            <h4>Week 10</h4>
+                            <ul>
+                                <li>Staff Portal dashboard</li>
+                                <li>Task management interface</li>
+                            </ul>
+                        </div>
+                        <div class="week-card">
+                            <h4>Week 11</h4>
+                            <ul>
+                                <li>Application tracking</li>
+                                <li>Lifecycle engine backend</li>
+                            </ul>
+                        </div>
+                        <div class="week-card">
+                            <h4>Week 12</h4>
+                            <ul>
+                                <li>Compliance Monitoring</li>
+                                <li>Reminder engine & Email</li>
+                            </ul>
+                        </div>
+                    </div>
                 </div>
 
-                <!-- Sprint 4 -->
-                <div class="sprint right animate-in" style="animation-delay: 0.7s;">
-                    <div class="sprint-content">
-                        <span class="sprint-date">May 30 - Jun 13, 2026</span>
-                        <h3>Sprint 04: KYC & Documents <span>04</span></h3>
-                        <ul class="sprint-features">
-                            <li><strong>KYC Workflow</strong> implementation</li>
-                            <li>Document Upload & Vault system</li>
-                            <li>Folder access system for clients</li>
-                        </ul>
+                <!-- MONTH 4 -->
+                <div class="month-block animate-in" style="animation-delay: 0.7s;">
+                    <div class="month-header">
+                        <h2>MONTH 4 - COMPLIANCE & INTEGRATIONS</h2>
                     </div>
-                    <div class="sprint-dot"></div>
+                    <div class="weeks-grid">
+                        <div class="week-card">
+                            <h4>Week 13</h4>
+                            <ul>
+                                <li>AML Integration (Compliance Box API)</li>
+                            </ul>
+                        </div>
+                        <div class="week-card">
+                            <h4>Week 14</h4>
+                            <ul>
+                                <li>BizFile extraction engine</li>
+                                <li>Auto-form population</li>
+                            </ul>
+                        </div>
+                        <div class="week-card">
+                            <h4>Week 15</h4>
+                            <ul>
+                                <li>Client Ticket System</li>
+                                <li>Messaging & live updates</li>
+                            </ul>
+                        </div>
+                        <div class="week-card">
+                            <h4>Week 16</h4>
+                            <ul>
+                                <li>Newsletter & Blog CMS</li>
+                                <li>Searchable Knowledge Base</li>
+                            </ul>
+                        </div>
+                    </div>
                 </div>
 
-                <!-- Sprint 5 -->
-                <div class="sprint left animate-in" style="animation-delay: 0.8s;">
-                    <div class="sprint-content">
-                        <span class="sprint-date">Jun 14 - Jun 28, 2026</span>
-                        <h3>Sprint 05: Admin & Staff Portal <span>05</span></h3>
-                        <ul class="sprint-features">
-                            <li><strong>Admin Dashboard</strong> development</li>
-                            <li>Staff portal & application tracking</li>
-                            <li>Task assignment & internal workflow</li>
-                        </ul>
+                <!-- MONTH 5 -->
+                <div class="month-block animate-in" style="animation-delay: 0.8s;">
+                    <div class="month-header">
+                        <h2>MONTH 5 - AI & DIGITAL DEPLOYMENT</h2>
                     </div>
-                    <div class="sprint-dot"></div>
+                    <div class="weeks-grid">
+                        <div class="week-card">
+                            <h4>Week 17</h4>
+                            <ul>
+                                <li>AI Resolution Drafting</li>
+                                <li>Prompt Template Engine</li>
+                            </ul>
+                        </div>
+                        <div class="week-card">
+                            <h4>Week 18</h4>
+                            <ul>
+                                <li>E-Signature integration</li>
+                                <li>Digital signing workflows</li>
+                            </ul>
+                        </div>
+                        <div class="week-card">
+                            <h4>Week 19</h4>
+                            <ul>
+                                <li>Payment Gateway (Stripe)</li>
+                                <li>Invoicing & Auto-billing</li>
+                            </ul>
+                        </div>
+                        <div class="week-card">
+                            <h4>Week 20</h4>
+                            <ul>
+                                <li>QA & Security Audits</li>
+                                <li>Deployment & Handover</li>
+                            </ul>
+                        </div>
+                    </div>
                 </div>
 
-                <!-- Sprint 6 -->
-                <div class="sprint right animate-in" style="animation-delay: 0.9s;">
-                    <div class="sprint-content">
-                        <span class="sprint-date">Jun 29 - Jul 13, 2026</span>
-                        <h3>Sprint 06: Compliance Automation <span>06</span></h3>
-                        <ul class="sprint-features">
-                            <li><strong>Compliance Monitoring</strong> tools</li>
-                            <li>Auto task management & email engine</li>
-                            <li>Integrated reminder system</li>
-                        </ul>
-                    </div>
-                    <div class="sprint-dot"></div>
-                </div>
-
-                <!-- Sprint 7 -->
-                <div class="sprint left animate-in" style="animation-delay: 1.0s;">
-                    <div class="sprint-content">
-                        <span class="sprint-date">Jul 14 - Jul 28, 2026</span>
-                        <h3>Sprint 07: Communication Layer <span>07</span></h3>
-                        <ul class="sprint-features">
-                            <li><strong>Client Ticket System</strong></li>
-                            <li>Internal messaging & live updates</li>
-                            <li>Newsletter & Blog CMS system</li>
-                        </ul>
-                    </div>
-                    <div class="sprint-dot"></div>
-                </div>
-
-                <!-- Sprint 8 -->
-                <div class="sprint right animate-in" style="animation-delay: 1.1s;">
-                    <div class="sprint-content">
-                        <span class="sprint-date">Jul 29 - Aug 12, 2026</span>
-                        <h3>Sprint 08: Integration Layer <span>08</span></h3>
-                        <ul class="sprint-features">
-                            <li><strong>AML Integration</strong> (Compliance Box)</li>
-                            <li>BizFile upload & data extraction</li>
-                            <li>Automated data validation API</li>
-                        </ul>
-                    </div>
-                    <div class="sprint-dot"></div>
-                </div>
-
-                <!-- Sprint 9 -->
-                <div class="sprint left animate-in" style="animation-delay: 1.2s;">
-                    <div class="sprint-content">
-                        <span class="sprint-date">Aug 13 - Aug 27, 2026</span>
-                        <h3>Sprint 09: Advanced Features <span>09</span></h3>
-                        <ul class="sprint-features">
-                            <li><strong>AI Drafting Module</strong> (Resolutions)</li>
-                            <li>E-Signature & Payment Gateways</li>
-                            <li>Financial transaction tracking</li>
-                        </ul>
-                    </div>
-                    <div class="sprint-dot"></div>
-                </div>
-
-                <!-- Sprint 10 -->
-                <div class="sprint right animate-in" style="animation-delay: 1.3s;">
-                    <div class="sprint-content">
-                        <span class="sprint-date">Aug 28 - Sep 11, 2026</span>
-                        <h3>Sprint 10: Testing & Delivery <span>10</span></h3>
-                        <ul class="sprint-features">
-                            <li><strong>QA & Performance Optimization</strong></li>
-                            <li>Security checks & final deployment</li>
-                            <li>Client training & project handover</li>
-                        </ul>
-                    </div>
-                    <div class="sprint-dot"></div>
-                </div>
             </div>
         </div>
 
